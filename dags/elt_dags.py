@@ -1,5 +1,5 @@
 from airflow import DAG
-from airflow.providers.google.cloud.operators.bigquery import CreateEmptyTableOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateTableOperator
 from airflow.providers.google.cloud.operators.bigquery import CreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.gcs import GCSCreateBucketOperator
@@ -63,7 +63,7 @@ with DAG(
     )
     
      # create table in bigquery
-   create_bigquery_table = CreateEmptyTableOperator(
+   create_bigquery_table = BigQueryCreateTableOperator(
          task_id='create_bigquery_table',
          table_id=f"{DATASET_NAME}.{TABLE_NAME}",
          project_id=PROJECT_ID,
