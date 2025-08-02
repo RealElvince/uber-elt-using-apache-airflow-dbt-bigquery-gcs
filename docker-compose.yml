@@ -7,7 +7,7 @@ services:
     environment:
       AIRFLOW_LOAD_EXAMPLES: "n"
       AIRFLOW_CORE_EXECUTOR: "SequentialExecutor"
-      AIRFLOW_CONN_GCP_DEFAULT: >-
+      AIRFLOW_CONN_GCP_CLOUD_DEFAULT: >-
         google-cloud-platform://?key_path=/opt/airflow/include/gcp/gcp_service.json&project=${PROJECT_ID}
     env_file:
       - .env
