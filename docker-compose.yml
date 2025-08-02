@@ -1,6 +1,6 @@
 services:
  airflow:
-    container_name: athletes_airflow
+    container_name: uber_airflow
     build:
       context: .
       dockerfile: Dockerfile
@@ -8,7 +8,7 @@ services:
       AIRFLOW_LOAD_EXAMPLES: "n"
       AIRFLOW_CORE_EXECUTOR: "SequentialExecutor"
       AIRFLOW_CONN_GCP_DEFAULT: >-
-        google-cloud-platform://?key_path=/opt/airflow/gcp/service_account.json&project=${PROJECT_ID}
+        google-cloud-platform://?key_path=/opt/airflow/gcp/gcp_service.json&project=${PROJECT_ID}
     env_file:
       - .env
 
