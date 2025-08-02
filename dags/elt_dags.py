@@ -42,7 +42,6 @@ with DAG(
        project_id=PROJECT_ID,
        labels={'env': 'production', 'team': 'data-engineering'},
        storage_class='STANDARD',
-       retention_period=timedelta(days=30),
        gcs_conn_id='google_cloud_default',
    )
     # upload data to gcs
@@ -98,13 +97,13 @@ with DAG(
    # transfer data from GCS to BigQuery
 gcs_to_bigquery = GCSToBigQueryOperator(
        task_id='gcs_to_bigquery',
-       bucket_name='uber-bucket',
+       bucket_name=BUCKET_NAME,
        source_objects=['uber/uber_data.csv'],
-       destination_project_dataset_table='your-gcp-project-id:uber_dataset.uber_table',
+       destination_project_dataset_table=TABLE_NAME,
        source_format='CSV',
        skip_leading_rows=1,
        write_disposition='WRITE_TRUNCATE',
-       gcp_conn_id='google_cloud_default',
+
    )
 
 
