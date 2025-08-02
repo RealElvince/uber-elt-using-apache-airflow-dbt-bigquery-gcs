@@ -42,6 +42,7 @@ with DAG(
        project_id=PROJECT_ID,
        labels={'env': 'production', 'team': 'data-engineering'},
        storage_class='STANDARD',
+       gcp_conn_id='gcp_cloud_default',
        
    )
     # upload data to gcs
@@ -50,7 +51,7 @@ with DAG(
          src='/include/data/uber_data.csv',
          dst='uber/uber_data.csv',
          bucket=BUCKET_NAME,
-         gcp_conn_id='google_cloud_default',
+         gcp_conn_id='gcp_cloud_default',
         mime_type='text/csv',
     )
     # create dataset in bigquery
@@ -60,7 +61,7 @@ with DAG(
          location='US',
         
          project_id=PROJECT_ID,
-         gcp_conn_id='google_cloud_default',
+         gcp_conn_id='gcp_cloud_default',
     )
     
      # create table in bigquery
@@ -69,7 +70,7 @@ with DAG(
          table_id=f"{DATASET_NAME}.{TABLE_NAME}",
          project_id=PROJECT_ID,
          dataset_id=DATASET_NAME,
-         gcp_conn_id='google_cloud_default',
+         gcp_conn_id='gcp_cloud_default',
          schema_fields=[
                    { "name": "VendorID", "type": "INTEGER", "mode": "REQUIRED" },
                    { "name": "tpep_pickup_datetime", "type": "TIMESTAMP", "mode": "REQUIRED" },
@@ -99,7 +100,7 @@ with DAG(
        task_id='gcs_to_bigquery',
        bucket=BUCKET_NAME,
        source_objects=['uber/uber_data.csv'],
-       destination_project_dataset_table=TABLE_NAME,
+       destination_project_dataset_table=f"{DATASET_NAME}.{TABLE_NAME}",
        source_format='CSV',
        skip_leading_rows=1,
        write_disposition='WRITE_TRUNCATE',
