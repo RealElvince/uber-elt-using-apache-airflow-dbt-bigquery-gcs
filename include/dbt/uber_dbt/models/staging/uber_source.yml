@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: uber_source
+    database: data-engineering-458813
+    schema: uber_dataset
+    tables:
+      - name: uber_data
+        description: "Raw Uber data ingested from GCS"
+       
