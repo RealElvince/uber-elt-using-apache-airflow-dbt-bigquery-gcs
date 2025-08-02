@@ -1,87 +1,28 @@
-version: '3.8'
-
-x-airflow-common: &airflow-common
-  build:
-    context: .
-    dockerfile: Dockerfile
-  env_file:
-    - .env
-  environment:
-    AIRFLOW__CORE__EXECUTOR: CeleryExecutor
-    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
-    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres/${POSTGRES_DB}
-    AIRFLOW__CELERY__BROKER_URL: redis://redis:6379/0
-    AIRFLOW__CORE__FERNET_KEY: ${FERNET_KEY}
-    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
-    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
-    GOOGLE_APPLICATION_CREDENTIALS: /opt/airflow/include/gcp/gcp_service.json
-  
-  volumes:
-    - ./dags:/opt/airflow/dags
-    - ./logs:/opt/airflow/logs
-    - ./plugins:/opt/airflow/plugins
-    - ./include/gcp/gcp_service.json:/opt/airflow/include/gcp/gcp_service.json
-    - ./include/data:/opt/airflow/include/data
-  depends_on:
-    - postgres
-    - redis
-  networks:
-    - airflow-network
-
 services:
-
-  postgres:
-    image: postgres:13
-    restart: always
+ airflow:
+    container_name: athletes_airflow
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      AIRFLOW_LOAD_EXAMPLES: "n"
+      AIRFLOW_CORE_EXECUTOR: "SequentialExecutor"
+      AIRFLOW_CONN_GCP_DEFAULT: >-
+        google-cloud-platform://?key_path=/opt/airflow/gcp/service_account.json&project=${PROJECT_ID}
     env_file:
       - .env
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+
     volumes:
-      - postgres-db-volume:/var/lib/postgresql/data
-    networks:
-      - airflow-network
+      - ./dags:/opt/airflow/dags
+      - ./include:/opt/airflow/include
+      
 
-  redis:
-    image: redis:6
-    restart: always
-    networks:
-      - airflow-network
-
-  airflow-init:
-    <<: *airflow-common
-    command: >
-      bash -c "
-      airflow db upgrade &&
-      airflow users create \
-        --username ${AIRFLOW_ADMIN_USER} --password ${AIRFLOW_ADMIN_PASSWORD} \
-        --firstname ${AIRFLOW_ADMIN_FIRSTNAME} --lastname ${AIRFLOW_ADMIN_LASTNAME} \
-        --role Admin --email ${AIRFLOW_ADMIN_EMAIL}
-      "
-
-  airflow-webserver:
-    <<: *airflow-common
-    command: webserver
     ports:
       - "8080:8080"
-    restart: always
-
-  airflow-scheduler:
-    <<: *airflow-common
-    command: scheduler
-    restart: always
-
-  airflow-worker:
-    <<: *airflow-common
-    command: celery worker
-    restart: always
-
-volumes:
-  postgres-db-volume:
-
+    networks:
+      - airflow_network 
+    command: >
+      bash -c "airflow standalone"
 networks:
-  airflow-network:
+  airflow_network:
     driver: bridge
