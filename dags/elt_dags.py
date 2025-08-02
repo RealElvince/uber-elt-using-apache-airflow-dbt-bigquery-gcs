@@ -48,7 +48,7 @@ with DAG(
     # upload data to gcs
    upload_data_to_gcs = LocalFilesystemToGCSOperator(
          task_id='upload_data_to_gcs',
-         src='/include/data/uber_data.csv',
+         src='/opt/airflow/include/data/uber_data.csv',
          dst='uber/uber_data.csv',
          bucket=BUCKET_NAME,
          gcp_conn_id='gcp_cloud_default',
