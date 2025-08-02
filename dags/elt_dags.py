@@ -58,7 +58,7 @@ with DAG(
          task_id='create_bigquery_dataset',
          dataset_id=DATASET_NAME,
          location='US',
-         labels={'env': 'production', 'team': 'data-engineering'},
+        
          project_id=PROJECT_ID,
          gcp_conn_id='google_cloud_default',
     )
@@ -95,9 +95,9 @@ with DAG(
    )
 
    # transfer data from GCS to BigQuery
-gcs_to_bigquery = GCSToBigQueryOperator(
+   gcs_to_bigquery = GCSToBigQueryOperator(
        task_id='gcs_to_bigquery',
-       bucket_name=BUCKET_NAME,
+       bucket=BUCKET_NAME,
        source_objects=['uber/uber_data.csv'],
        destination_project_dataset_table=TABLE_NAME,
        source_format='CSV',
