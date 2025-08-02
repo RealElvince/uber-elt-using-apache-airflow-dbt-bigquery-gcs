@@ -42,7 +42,7 @@ with DAG(
        project_id=PROJECT_ID,
        labels={'env': 'production', 'team': 'data-engineering'},
        storage_class='STANDARD',
-       gcs_conn_id='google_cloud_default',
+       
    )
     # upload data to gcs
    upload_data_to_gcs = LocalFilesystemToGCSOperator(
