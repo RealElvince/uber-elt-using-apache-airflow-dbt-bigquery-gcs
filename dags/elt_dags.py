@@ -1,9 +1,10 @@
 from airflow import DAG
-from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateTableOperator
-from airflow.providers.google.cloud.operators.bigquery import CreateEmptyDatasetOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyTableOperator
+from airflow.providers.google.cloud.operators.bigquery import BigQueryCreateEmptyDatasetOperator
 from airflow.providers.google.cloud.transfers.local_to_gcs import LocalFilesystemToGCSOperator
 from airflow.providers.google.cloud.operators.gcs import GCSCreateBucketOperator
 from airflow.providers.google.cloud.operators.bigquery import GCSToBigQueryOperator
+
 from datetime import timedelta, datetime
 import os
 from dotenv import load_dotenv
@@ -53,7 +54,7 @@ with DAG(
         mime_type='text/csv',
     )
     # create dataset in bigquery
-   create_bigquery_dataset = CreateEmptyDatasetOperator(
+   create_bigquery_dataset = BigQueryCreateEmptyDatasetOperator(
          task_id='create_bigquery_dataset',
          dataset_id=DATASET_NAME,
          location='US',
@@ -63,7 +64,7 @@ with DAG(
     )
     
      # create table in bigquery
-   create_bigquery_table = BigQueryCreateTableOperator(
+   create_bigquery_table = BigQueryCreateEmptyTableOperator(
          task_id='create_bigquery_table',
          table_id=f"{DATASET_NAME}.{TABLE_NAME}",
          project_id=PROJECT_ID,
