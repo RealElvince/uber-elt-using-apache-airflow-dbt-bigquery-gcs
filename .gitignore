@@ -13,3 +13,4 @@ airflow.db
 include/gcp/
 logs/
 astro-venv/
+include/.dbt/
