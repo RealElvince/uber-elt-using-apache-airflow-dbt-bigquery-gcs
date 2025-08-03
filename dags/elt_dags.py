@@ -67,7 +67,7 @@ with DAG(
      # create table in bigquery
    create_bigquery_table = BigQueryCreateEmptyTableOperator(
          task_id='create_bigquery_table',
-         table_id=f"{DATASET_NAME}.{TABLE_NAME}",
+         table_id=TABLE_NAME,
          project_id=PROJECT_ID,
          dataset_id=DATASET_NAME,
          gcp_conn_id='gcp_cloud_default',
