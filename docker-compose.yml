@@ -18,7 +18,7 @@ services:
       - ./logs:/opt/airflow/logs
       - ./include/gcp/gcp_service.json:/opt/airflow/include/gcp/gcp_service.json
       - ./include/.dbt/profiles.yml:/opt/airflow/include/.dbt/profiles.yml
-
+      - ./include/dbt/uber_dbt:/opt/airflow/include/dbt/uber_dbt
     ports:
       - "8080:8080"
     networks:
