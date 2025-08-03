@@ -104,6 +104,7 @@ with DAG(
        source_format='CSV',
        skip_leading_rows=1,
        write_disposition='WRITE_TRUNCATE',
+       gcp_conn_id='gcp_cloud_default'
 
    )
 
