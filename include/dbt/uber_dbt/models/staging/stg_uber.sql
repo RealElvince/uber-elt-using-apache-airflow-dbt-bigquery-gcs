@@ -18,4 +18,4 @@ SELECT
   tolls_amount,
   improvement_surcharge,
   ABS(total_amount) AS total_amount
-FROM {{ source('uber_source', 'uber_data') }};
+FROM {{ source('uber_source', 'uber_data') }}
