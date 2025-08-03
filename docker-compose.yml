@@ -17,6 +17,7 @@ services:
       - ./include:/opt/airflow/include
       - ./logs:/opt/airflow/logs
       - ./include/gcp/gcp_service.json:/opt/airflow/include/gcp/gcp_service.json
+      - ./include/.dbt/profiles.yml:/opt/airflow/include/.dbt/profiles.yml
 
     ports:
       - "8080:8080"
